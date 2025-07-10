@@ -41,44 +41,62 @@
     }
     .award-list {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
       gap: 1.5rem;
       padding: 0;
       margin: 0;
       list-style: none;
+      justify-content: center;
     }
     .award-item {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      background: #fff;
+      background: #fdfdfd;
       padding: 1rem;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      gap: 1rem;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      border: 1px solid #eee;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeInUp 0.6s ease forwards;
+    }
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     .award-item img {
-      width: 60px;
-      height: 60px;
+      width: 80px;
+      height: 80px;
       object-fit: cover;
       border-radius: 50%;
-      flex-shrink: 0;
+      margin-bottom: 0.75rem;
     }
     .award-info {
       display: flex;
       flex-direction: column;
+      flex: 1;
     }
     .award-info strong {
       font-size: 1rem;
       color: #333;
+      white-space: normal;
+      margin-bottom: 0.25rem;
     }
     .award-info span {
-      font-size: 0.95rem;
-      color: #222;
+      font-size: 1.15rem;
+      color: #000;
+      font-weight: bold;
+      margin-bottom: 0.15rem;
     }
     .award-info small {
       font-size: 0.85rem;
-      color: #777;
+      color: #00563f;
+      font-weight: bold;
     }
   </style>
 </head>
