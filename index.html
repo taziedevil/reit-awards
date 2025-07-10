@@ -73,7 +73,9 @@
       width: 120px;
       height: 120px;
       object-fit: cover;
-      border-radius: 50%;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
       margin-bottom: 0.75rem;
     }
     .award-info {
@@ -176,7 +178,7 @@ function filterAwards() {
   filtered.forEach(entry => {
     container.innerHTML += `
       <li class="award-item">
-        <img src="${entry.image || 'https://via.placeholder.com/60'}" alt="${entry.name}" />
+        <img src="${entry.image || 'https://via.placeholder.com/200'}" alt="${entry.name}" />
         <div class="award-info">
           <strong>${entry.year} – ${entry.award}</strong>
           <span>${entry.name || ''}</span>
