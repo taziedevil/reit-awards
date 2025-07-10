@@ -17,12 +17,21 @@
       text-align: center;
       color: #00563f;
       margin: 1.5rem 0 0.5rem;
+      background: #f7f7f7;
+      z-index: 100;
+      position: sticky;
+      top: 0;
     }
     .controls, .year-tabs {
       text-align: center;
       margin: 0.5rem 0;
-      z-index: 10;
+      z-index: 100;
       background-color: #f7f7f7;
+      position: sticky;
+      top: 3.5rem;
+    }
+    .controls {
+      top: 7rem;
     }
     select, .year-tabs button {
       padding: 0.5rem 1rem;
@@ -48,6 +57,7 @@
       flex: 1;
       overflow-y: auto;
       padding: 1rem 2rem;
+      scroll-behavior: smooth;
     }
     .awards-section {
       background: white;
@@ -116,6 +126,21 @@
       color: #00563f;
       font-weight: bold;
     }
+    #backToTop {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      background: #00563f;
+      color: white;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      display: none;
+      z-index: 200;
+    }
 
     @media (max-width: 600px) {
       h1 {
@@ -154,6 +179,8 @@
     <ul id="awardList" class="award-list"></ul>
   </section>
 </div>
+
+<button id="backToTop" onclick="scrollToTop()">Back to Top</button>
 
 <script>
 const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQm88C5MmdTtVQfFo3eJo2XsjVDFBrNwt6_6MwUG7rQEWZTb0qQJQXX3cRl6aZBWPMLhn8Zk3z7qD7L/pub?gid=0&single=true&output=csv";
@@ -231,6 +258,20 @@ function filterByYear(year) {
   event.target.classList.add("active");
   filterAwards();
 }
+
+function scrollToTop() {
+  document.querySelector('.scroll-container').scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+const scrollContainer = document.querySelector('.scroll-container');
+scrollContainer.addEventListener('scroll', () => {
+  const backBtn = document.getElementById('backToTop');
+  if (scrollContainer.scrollTop > 200) {
+    backBtn.style.display = 'block';
+  } else {
+    backBtn.style.display = 'none';
+  }
+});
 
 fetch(SHEET_CSV_URL)
   .then(res => res.text())
