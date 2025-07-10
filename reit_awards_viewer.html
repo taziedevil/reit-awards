@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REIT Award Winners</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      background-color: #f7f7f7;
+    }
+    h1 {
+      text-align: center;
+      color: #00563f;
+    }
+    .controls, .year-tabs {
+      text-align: center;
+      margin: 1.5rem 0;
+    }
+    select, .year-tabs button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      margin: 0.5rem;
+    }
+    .year-tabs button {
+      background: #00563f;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .year-tabs button.active {
+      background-color: #008f6f;
+    }
+    .awards-section {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .award-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .award-item {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      gap: 1rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .award-item img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .award-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .award-info strong {
+      font-size: 1rem;
+      color: #333;
+    }
+    .award-info span {
+      font-size: 0.95rem;
+      color: #222;
+    }
+    .award-info small {
+      font-size: 0.85rem;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+<h1>REIT Award Winners</h1>
+
+<div class="year-tabs" id="yearTabs"></div>
+
+<div class="controls">
+  <label for="awardFilter"><strong>Filter by Award:</strong></label>
+  <select id="awardFilter" onchange="filterAwards()">
+    <option value="">-- All Awards --</option>
+  </select>
+</div>
+
+<section id="filtered-results" class="awards-section">
+  <ul id="awardList" class="award-list"></ul>
+</section>
+
+<script>
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQm88C5MmdTtVQfFo3eJo2XsjVDFBrNwt6_6MwUG7rQEWZTb0qQJQXX3cRl6aZBWPMLhn8Zk3z7qD7L/pub?gid=0&single=true&output=csv";
+let allAwardsData = [];
+let currentYear = null;
+
+function parseCSV(csvText) {
+  const lines = csvText.trim().split('\n');
+  const headers = lines[0].split(',');
+  return lines.slice(1).map(line => {
+    const values = line.split(',');
+    const obj = {};
+    headers.forEach((h, i) => {
+      obj[h.trim()] = values[i] ? values[i].trim() : "";
+    });
+    return {
+      year: parseInt(obj["Year"]),
+      award: obj["Award Title"],
+      name: obj["Winner Name"],
+      business: obj["Business Name"],
+      image: obj["Image URL"]
+    };
+  });
+}
+
+function populateFilters(data) {
+  const years = [...new Set(data.map(d => d.year))].sort((a, b) => b - a);
+  const awards = [...new Set(data.map(d => d.award).filter(Boolean))].sort();
+
+  const yearTabs = document.getElementById("yearTabs");
+  yearTabs.innerHTML = '<button onclick="filterByYear(null)" class="active">All Years</button>';
+  years.forEach(yr => {
+    yearTabs.innerHTML += `<button onclick="filterByYear(${yr})">${yr}</button>`;
+  });
+
+  const awardFilter = document.getElementById("awardFilter");
+  awards.forEach(title => {
+    awardFilter.innerHTML += `<option value="${title}">${title}</option>`;
+  });
+}
+
+function filterAwards() {
+  const selectedAward = document.getElementById("awardFilter").value;
+  const container = document.getElementById("awardList");
+  container.innerHTML = "";
+
+  const filtered = allAwardsData.filter(entry => {
+    const yearMatch = currentYear === null || entry.year === currentYear;
+    const awardMatch = selectedAward === "" || entry.award === selectedAward;
+    return yearMatch && awardMatch;
+  }).sort((a, b) => a.award.localeCompare(b.award));
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<p>No results found.</p>';
+    return;
+  }
+
+  filtered.forEach(entry => {
+    container.innerHTML += `
+      <li class="award-item">
+        <img src="${entry.image || 'https://via.placeholder.com/60'}" alt="${entry.name}" />
+        <div class="award-info">
+          <strong>${entry.year} – ${entry.award}</strong>
+          <span>${entry.name || ''}</span>
+          <small>${entry.business || ''}</small>
+        </div>
+      </li>
+    `;
+  });
+}
+
+function filterByYear(year) {
+  currentYear = year;
+  document.querySelectorAll(".year-tabs button").forEach(btn => btn.classList.remove("active"));
+  event.target.classList.add("active");
+  filterAwards();
+}
+
+fetch(SHEET_CSV_URL)
+  .then(res => res.text())
+  .then(csv => {
+    allAwardsData = parseCSV(csv);
+    populateFilters(allAwardsData);
+    filterAwards();
+  });
+</script>
+
+</body>
+</html>
