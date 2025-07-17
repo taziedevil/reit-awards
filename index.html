@@ -17,7 +17,7 @@
       text-align: center;
       color: #00563f;
       margin: 1.5rem 0 0.5rem;
-      background-colour: #f7f4f0;
+      background: #f7f4f0;
       z-index: 100;
       position: sticky;
       top: 0;
@@ -28,20 +28,26 @@
       z-index: 100;
       background-color: #f7f4f0;
       position: sticky;
-      top: 3.5rem;
     }
     .controls {
       top: 7rem;
     }
-    select, .year-tabs button {
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      margin: 0.5rem;
-      max-width: 100%;
+    .year-tabs {
+      top: 3.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      overflow-x: auto;
+      white-space: nowrap;
     }
-    select {
-      width: 90%;
-      max-width: 400px;
+    .year-tabs::-webkit-scrollbar {
+      height: 6px;
+    }
+    .year-tabs::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 3px;
     }
     .year-tabs button {
       background: #00563f;
@@ -49,9 +55,20 @@
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      white-space: nowrap;
     }
     .year-tabs button.active {
       background-color: #008f6f;
+    }
+    select {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      margin: 0.5rem;
+      width: 90%;
+      max-width: 400px;
     }
     .scroll-container {
       flex: 1;
@@ -60,10 +77,10 @@
       scroll-behavior: smooth;
     }
     .awards-section {
-      background: #f7f4f0;
+      background-color: #f7f4f0;
       padding: 1.5rem;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: none;
     }
     .award-list {
       display: grid;
@@ -96,8 +113,8 @@
       }
     }
     .award-item img {
-      width: 120px;
-      height: 120px;
+      width: 200px;
+      height: 200px;
       object-fit: cover;
       border-radius: 8px;
       border: 1px solid #ccc;
@@ -157,6 +174,9 @@
       }
       .scroll-container {
         padding: 1rem;
+      }
+      .year-tabs {
+        flex-wrap: nowrap;
       }
     }
   </style>
